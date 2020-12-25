@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head></head>
+<body>
+    <h1>Using Image Tool API to apply image filtering</h1>
+    <h3>There is only 1 route</h3>
+    <p>POST /</p>
+    <p>The body should be a multi-part form with certain key value pairs.</p>
+    <h4>Example:</h4>
+    <code>POST / <br>
+        image : example.jpg<br>
+        filter : find_edges<br>
+    </code>
+
+    <p>
+        All request must have an 'image' key with the actual image file as the value and 
+        and a 'filter' key with the filter function name as a the value. But, certain 
+        filters require additional parameters. These parameters should be 
+        specified as additional key value pairs.
+    </p>
+
+    <h4>Example:</h4>
+    <code>POST / <br>
+        image : example.jpg<br>
+        filter : unsharp_mask<br>
+        radius : 2<br>
+        percent : 150<br>
+        threshold : 1
+    </code>
+</body>
