@@ -61,5 +61,5 @@ async def filter_post(request: Request):
         img.save(CONVERTED_DIR)
         return FileResponse(getattr(img, 'final_dir'))
     except:
-        raise HTTPException(status_code=404, detail="Error")
+        raise HTTPException(status_code=404, detail="Error, check keys and values")
     
