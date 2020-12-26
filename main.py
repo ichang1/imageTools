@@ -42,33 +42,33 @@ async def filter_post(request: Request):
 @app.post("/", response_class=FileResponse)
 async def filter_post(request: Request):
     clean()
-    try:
-        form_data = await request.form()
-        f = form_data['filter']
-        params = {}
-        if 'radius' in form_data.keys():
-            params['radius'] = form_data['radius']
-        if 'percent' in form_data.keys():
-            params['percent'] = form_data['percent']
-        if 'threshold' in form_data.keys():
-            params['threshold'] = form_data['threshold']
-        if 'kernel' in form_data.keys():
-            params['kernel'] = form_data['kernel']
-        if 'scale' in form_data.keys():
-            params['scale'] = form_data['scale']
-        if 'offset' in form_data.keys():
-            params['offset'] = form_data['offset']
-        if 'dim' in form_data.keys():
-            params['dim'] = form_data['dim']
-        name = form_data['image'].filename
-        file = form_data['image'].file
-        file_path = '{}{}'.format(CONVERTED_DIR, name)
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file, buffer)
-        img = ImageWrap(file_path)
-        getattr(img, f)(params=params)
-        img.save(CONVERTED_DIR)
-        return FileResponse(getattr(img, 'final_dir'))
-    except:
-        raise HTTPException(status_code=404, detail="Error, check keys and values")
+    #try:
+    form_data = await request.form()
+    f = form_data['filter']
+    params = {}
+    if 'radius' in form_data.keys():
+        params['radius'] = form_data['radius']
+    if 'percent' in form_data.keys():
+        params['percent'] = form_data['percent']
+    if 'threshold' in form_data.keys():
+        params['threshold'] = form_data['threshold']
+    if 'kernel' in form_data.keys():
+        params['kernel'] = form_data['kernel']
+    if 'scale' in form_data.keys():
+        params['scale'] = form_data['scale']
+    if 'offset' in form_data.keys():
+        params['offset'] = form_data['offset']
+    if 'dim' in form_data.keys():
+        params['dim'] = form_data['dim']
+    name = form_data['image'].filename
+    file = form_data['image'].file
+    file_path = '{}{}'.format(CONVERTED_DIR, name)
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file, buffer)
+    img = ImageWrap(file_path)
+    getattr(img, f)(params=params)
+    img.save(CONVERTED_DIR)
+    return FileResponse(getattr(img, 'final_dir'))
+    # except:
+    #     raise HTTPException(status_code=404, detail="Error, check keys and values")
     
