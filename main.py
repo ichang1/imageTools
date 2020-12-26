@@ -8,7 +8,7 @@ import os
 import tempfile
 
 app = FastAPI()
-STATIC_DIR = 'static/'
+CONVERTED_DIR = 'converted/'
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates/")
 
@@ -18,9 +18,9 @@ methods = [method_name for method_name in dir(ImageWrap)
                   and method_name != "save"]
 
 def clean():
-    filelist = [ f for f in os.listdir(STATIC_DIR)]
+    filelist = [ f for f in os.listdir(CONVERTED_DIR)]
     for f in filelist:
-        os.remove(os.path.join(STATIC_DIR, f))
+        os.remove(os.path.join(CONVERTED_DIR, f))
 
 @app.get("/", response_class=HTMLResponse)
 async def filter_post(request: Request):
@@ -45,14 +45,20 @@ async def filter_post(request: Request):
         params['threshold'] = form_data['threshold']
     if 'kernel' in form_data.keys():
         params['kernel'] = form_data['kernel']
+    if 'scale' in form_data.keys():
+        params['scale'] = form_data['scale']
+    if 'offset' in form_data.keys():
+        params['offset'] = form_data['offset']
+    if 'dim' in form_data.keys():
+        params['dim'] = form_data['dim']
     name = form_data['image'].filename
     file = form_data['image'].file
-    file_path = '{}{}'.format(STATIC_DIR, name)
+    file_path = '{}{}'.format(CONVERTED_DIR, name)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file, buffer)
     img = ImageWrap(file_path)
     getattr(img, f)(params=params)
-    img.save(STATIC_DIR)
+    img.save(CONVERTED_DIR)
     return FileResponse(getattr(img, 'final_dir'))
     # except:
     #     raise HTTPException(status_code=404, detail="Error")

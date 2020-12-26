@@ -1,7 +1,12 @@
 <!DOCTYPE html>
-<head></head>
+<html>
+<head>  
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
 <body>
-    <h1>Using Image Tool API to apply image filtering</h1>
+    <h1>Using Image Tool API to edit images</h1>
     <h3>There is only 1 route</h3>
     <p>POST /</p>
     <p>The body should be a multi-part form with certain key value pairs.</p>
@@ -12,10 +17,11 @@
     </code>
 
     <p>
-        All request must have an 'image' key with the actual image file as the value and 
-        and a 'filter' key with the filter function name as a the value. But, certain 
-        filters require additional parameters. These parameters should be 
-        specified as additional key value pairs.
+        All request must have an 'image' key with the actual image file as the 
+        value and a 'filter' key with the filter function name spelled below 
+        as the value. But, certain filters require additional parameters. 
+        These additional parameters should be specified as additional 
+        key value pairs with exact spelling of the parameter in documentation.
     </p>
 
     <h4>Example:</h4>
@@ -26,4 +32,402 @@
         percent : 150<br>
         threshold : 1
     </code>
-</body>
+
+    <h2>Tools</h2>
+    <ul style="list-style-type:none;">
+        <li>
+            grayscale
+            <a href="#grayscale" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            blur
+            <a href="#blur" class="table_content">
+                <i class="fas fa-link"></i> 
+            </a>
+        </li>
+        <li>
+            contour
+            <a href="#contour" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            detail
+            <a href="#detail" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            edge_enhance
+            <a href="#edge_enhance" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            edge_enhance_more
+            <a href="#edge_enhance_more" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            emboss
+            <a href="#emboss" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            find_edges
+            <a href="#find_edges" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            sharpen
+            <a href="#sharpen" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            smooth
+            <a href="#smooth" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            smooth_more
+            <a href="#smooth_more" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            gaussian_blur
+            <a href="#gaussian_blur" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            box_blur
+            <a href="#box_blur" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            unsharp_mask
+            <a href="#unsharp_mask" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            custom
+            <a href="#custom" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+        <li>
+            resize
+            <a href="#resize" class="table_content">
+                <i class="fas fa-link"></i>
+            </a>
+        </li>
+    </ul>
+
+    <h2>Documentation</h2>
+
+    <a id="grayscale">
+        <h3><code>grayscale</code></h3>
+        <div class="def">
+            <p>
+                Grayscales image with the transformation,  
+                \[
+                \frac{299}{1000}R + \frac{587}{1000}G + \frac{114}{1000}B
+                \]
+                to each pixel.
+            </p>
+        </div>
+    </a>
+
+    <a id="blur">
+        <h3><code>blur</code></h3>
+        <div class="def">
+            <p>Lightly blurs the image using the 5 x 5 kernel below.</p>
+            \[
+            \frac{1}{16}
+            \begin{pmatrix}
+            1 & 1 & 1 & 1 & 1\\
+            1 & 0 & 0 & 0 & 1\\
+            1 & 0 & 0 & 0 & 1\\
+            1 & 0 & 0 & 0 & 1\\
+            1 & 1 & 1 & 1 & 1\\
+            \end{pmatrix}
+            \]
+        </div>
+    </a>
+    
+    <a id="contour">
+        <h3><code>contour</code></h3>
+        <div class="def">
+            <p>
+                Contours the image with different intensities for different 
+                contours. Contours are more defined where surrounding colors 
+                are much different. Applies the kernel below to amplify contour
+                lines, then offsets the rgb value by 255 to get the contour lines.
+            </p>
+                \[
+                \begin{pmatrix}
+                -1 & -1 & -1 \\
+                -1 & 8 & -1 \\
+                -1 & -1 & -1 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+
+    <a id="detail">
+        <h3><code>detail</code></h3>
+        <div class="def">
+            <p>
+                Strengthens the color of each pixel and balances it with the rgb value 
+                of the pixel above, below, right and left of it with the kernel below. 
+            </p>
+                \[
+                \frac{1}{6}
+                \begin{pmatrix}
+                -1 & -1 & -1 \\
+                -1 & 8 & -1 \\
+                -1 & -1 & -1 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+
+    <a id="edge_enhance">
+        <h3><code>edge_enhance</code></h3>
+        <div class="def">
+            <p>
+                Slightly enhances the edges of the image using the kernel below
+            </p>  
+                \[
+                \frac{1}{2}
+                \begin{pmatrix}
+                -1 & -1 & -1 \\
+                -1 & 10 & -1 \\
+                -1 & -1 & -1 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+    
+    <a id="edge_enhance_more">
+        <h3><code>edge_enhance_more</code></h3>
+        <div class="def">
+            <p>
+                Greatly enhances the edges of the image using the kernel below
+            </p>  
+                \[
+                \begin{pmatrix}
+                -1 & -1 & -1 \\
+                -1 & 9 & -1 \\
+                -1 & -1 & -1 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+
+    <a id="emboss">
+        <h3><code>emboss</code></h3>
+        <div class="def">
+            <p>
+                Embosses the image using the kernel below and offsets each 
+                rgb value by 128.
+            </p>  
+                \[
+                \begin{pmatrix}
+                -1 & 0 & 0 \\
+                0 & 1 & 0 \\
+                0 & 0 & 0 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+
+    <a id="sharpen">
+        <h3><code>sharpen</code></h3>
+        <div class="def">
+            <p>
+                Sharpens the color of the image using the kernel below.
+            </p>  
+                \[
+                \frac{1}{16}
+                \begin{pmatrix}
+                -2 & -2 & -2 \\
+                -2 & 32 & -2 \\
+                -2 & -2 & -2 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+
+    <a id="smooth">
+        <h3><code>smooth</code></h3>
+        <div class="def">
+            <p>
+                Smooths the color of the image using the kernel below.
+            </p>  
+                \[
+                \frac{1}{13}
+                \begin{pmatrix}
+                1 & 1 & 1 \\
+                1 & 5 & 1 \\
+                1 & 1 & 1 \\
+                \end{pmatrix}
+                \]
+        </div>
+    </a>
+
+    <a id="gaussian_blur">
+        <h3><code>gaussian_blur</code></h3>
+        <div class="def">
+            <p>Applies the gaussian blur for each pixel, averaging the rgb 
+                values of pixels in a circle of given radius away for each pixel.</p>
+            <i>Parameters</i>
+            <ul>
+                <li>
+                    <i>
+                        radius - the radius for the gaussian blur as a non-negative float/integer
+                    </i>
+                </li>
+            </ul>
+        </div>
+    </a>
+
+    <a id="box_blur">
+        <h3><code>box_blur</code></h3>
+        <div class="def">
+            <p>Applies the box blur for each pixel, averaging the rgb 
+                values of pixels of in a square extending the given radius 
+                in each direction for each pixel.</p>
+            <i>Parameters</i>
+            <ul>
+                <li>
+                    <i>
+                        radius - the radius for the box blur as a non-negative float/integer
+                    </i>
+                </li>
+            </ul>
+        </div>
+    </a>
+    
+    <a id="unsharp_mask">
+        <h3><code>unsharp_mask</code></h3>
+        <div class="def">
+            <p>
+                Applies the unsharp mask in an attempt to unblur an image. More
+                information on paramters can be found
+                <a href="https://en.wikipedia.org/wiki/Unsharp_masking#:~:text=Unsharp%20masking%20(USM)%20is%20an,mask%20of%20the%20original%20image.">
+                here
+                </a>
+            </p>
+            <i>Parameters</i>
+            <ul>
+                <li>
+                    <i>
+                        radius - the radius for the unsharping. Recommend to be 
+                        between 0.5 and 2
+                    </i>
+                </li>
+                <li>
+                    <i>
+                        percent - the strength for the unsharp mask. Recommended to be 
+                        between 50 and 150 (integer)
+                    </i>
+                </li>
+                <li>
+                    <i>
+                        threshold - the level threshold of minimum 
+                        brightness that is sharpened (integer) 
+                    </i>
+                </li>
+            </ul>
+        </div>
+    </a>
+    
+    <a id="custom">
+        <h3><code>custom</code></h3>
+        <div class="def">
+            <p>
+                Applies a custom filter with a kernel, a scale for the kernel
+                and a rgb offset.
+            </p>
+            <i>Parameters</i>
+            <ul>
+                <li>
+                    <i>
+                        kernel - the n by n matrix of kernel weights (n must be 3
+                        or 5 and weights must be integers). Format should be 
+                        a string of the rows of the kernel where weights 
+                        are separated by 1 space. 
+                    </i>
+                </li>
+                <li>
+                    <i>
+                        scale - factor that each rgb value will be divided by after
+                        applying kernel (integer). This parameter is 
+                        <strong>
+                            optional
+                        </strong>
+                        . If not provided, the default is 1.
+                    </i>
+                </li>
+                <li>
+                    <i>
+                        offset - factor that each rgb value will be offsetted by after
+                        applying kernel and scale (integer). This parameter is
+                        <strong>
+                            optional
+                        </strong>
+                        . If not provided, the default is 0.
+                    </i>
+                </li>
+            </ul>
+            <p>Example: </p>
+                \[
+                \frac{1}{13}
+                \begin{pmatrix}
+                1 & 1 & 1 \\
+                1 & 5 & 1 \\
+                1 & 1 & 1 \\
+                \end{pmatrix}
+                \]
+            <p>
+                For this example, the kernel would be "1 1 1 1 5 1 1 1 1" 
+                and the scale would be 13
+            </p>
+        </div>
+    </a>
+
+    <a id="resize">
+        <h3><code>resize</code></h3>
+        <div class="def">
+            <p>Resizes the image with the given dimensions</p>
+            <i>Parameters</i>
+            <ul>
+                <li>
+                    <i>
+                        dim - the dimensions of the resized image. Format should be 
+                        a string of the dimensions with length first where the dimensions
+                        are separated by a space. 
+                    </i>
+                </li>
+            </ul>
+            <p>
+                Example: <br>
+                To rescale an image to have a length of 200 and a height of 100,
+                the dim parameter should be "200 100"
+            </p>
+        </div>
+    </a>
+</body>  
+</html>
+

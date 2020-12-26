@@ -1,0 +1,12 @@
+a { 
+    color: black;
+}
+
+.def {
+    padding-left: 5em;
+    padding-right: 5em;
+}
+
+body {
+    padding: 40px;    
+}

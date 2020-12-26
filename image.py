@@ -75,23 +75,31 @@ class ImageWrap:
     def unsharp_mask(self, **kwargs):
         params = kwargs['params']
         radius = float(params['radius'])
-        percent = float(params['percent'])
-        threshold = float(params['threshold'])
+        percent = int(params['percent'])
+        threshold = int(params['threshold'])
         self.final = self.img.filter(ImageFilter.UnsharpMask(radius, percent, threshold))
         self.filter = 'unsharp_mask'
 
-    def kernel(self, **kwargs):
+    def custom(self, **kwargs):
         params = kwargs['params']
-        kernel = tuple(params['kernel'])
+        kernel = tuple(map(int, params['kernel'].split(' ')))
+        if 'scale' in params.keys():
+            scale = int(params['scale'])
+        else:
+            scale = 1
+        if 'offset' in params.keys():
+            offset = int(params['offset'])
+        else:
+            offset = 0
         n = int(len(kernel)**0.5)
-        f = ImageFilter.Kernel((n, n), kernel, 1, 0)
+        f = ImageFilter.Kernel((n, n), kernel, scale, offset)
         self.final = self.img.filter(f)
-        self.filter = "kernel"
+        self.filter = "custom"
 
     def resize(self, **kwargs):
         params = kwargs['params']
-        dim = tuple(params['dim'])
+        dim = tuple(map(int, params['dim'].split(' ')))
         self.final = self.img.resize(dim)
-        self.filter = "resized"
+        self.filter = "resize"
 
     
