@@ -432,13 +432,34 @@
         </div>
     </a>
 
-    <div class="def">
+    <div id="example">
         <p>
             Complete example using Python:
         </p>
-        <code>
-            
-        </code>
+        <pre>
+            <code>
+                import requests
+
+                url = 'http://localhost:8000/'
+                image_path = 'path-to-image'
+
+                image = {
+                    'image': open(image_path, 'rb')
+                }
+
+                other = {
+                    'filter': 'custom',
+                    'kernel': '0 0 0 0 1 0 0 0 0',
+                    'offset': 100
+                }
+
+                res = requests.post(url, files=image, data=other)
+
+                save_path = "path-to-output"
+                with open(save_path, "wb") as buffer:
+                    buffer.write(res.content)
+            </code>
+        </pre>
     </div>
 </body>  
 </html>
