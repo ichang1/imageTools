@@ -24,7 +24,7 @@ def clean():
 
 @app.get("/", response_class=HTMLResponse)
 async def filter_post(request: Request):
-    context = await {'request':request}
+    context = {'request':request}
     return templates.TemplateResponse('home.html', context)
 
 # filename — Name of the file. It is based on the original file name uploaded.
